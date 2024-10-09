@@ -65,6 +65,13 @@ void sort(float* arr, int size) {
     delete[] left;
 }
 
+void print(float* arr, int size) {
+    for (int i = 0; i < size; i++) {
+        printf("%f ", arr[i]);
+    }
+    printf("\n");
+}
+
 int main() {
 
     std::srand(std::time(0));
@@ -74,18 +81,13 @@ int main() {
 
     printf("Populating the array of size %i with random numbers...\n", size);
     populate(arr, size);
-    for (int i = 0; i < size; i++) {
-        printf("%f ", arr[i]);
-    }
-    printf("\n");
+    print(arr, size);
     printf("Array has been populated successfully.\n");
 
+    
     printf("Sorting...\n");
     sort(arr, size);
-    for (int i = 0; i < size; i++) {
-        printf("%f ", arr[i]);
-    }
-    printf("\n");
+    print(arr, size);
     printf("Numbers have been sorted successfully.\n");
 
 
