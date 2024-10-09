@@ -14,5 +14,11 @@ file(MAKE_DIRECTORY bin/)
 add_executable(${PROJECT_NAME}-seq src/mergesort_seq.cpp)
 add_executable(${PROJECT_NAME}-par src/mergesort_par.cpp)
 
+find_package(OpenMP REQUIRED)
+if(OpenMP_CXX_FOUND)
+    target_compile_options(${PROJECT_NAME}-par PUBLIC ${OpenMP_CXX_FLAGS})
+    target_link_libraries(${PROJECT_NAME}-par PUBLIC ${OpenMP_CXX_LIBRARIES})
+endif()
+
 install(TARGETS ${PROJECT_NAME}-seq DESTINATION ${PROJECT_SOURCE_DIR}/bin/)
 install(TARGETS ${PROJECT_NAME}-par DESTINATION ${PROJECT_SOURCE_DIR}/bin/)
