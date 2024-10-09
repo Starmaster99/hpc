@@ -87,8 +87,8 @@ int main() {
 
     std::srand(std::time(0));
 
-    int size        = 10000;
-    int iterations  = 100;
+    int size        = 1000;
+    int iterations  = 1000;
     u_int64_t totalDurationUs = 0;
     double totalComparisons = 0;
     double totalAccesses = 0;
@@ -115,7 +115,7 @@ int main() {
         delete[] arr;
     }
     auto endIter = std::chrono::high_resolution_clock::now();   // stop simulation benchmark
-    // total time spent running simulations
+    // total time spent running simulationsS
     auto durationIter = std::chrono::duration_cast<std::chrono::microseconds>(endIter - startIter).count();
 
     // calculate averages
@@ -124,11 +124,12 @@ int main() {
     double averageAccesses = totalAccesses / iterations;
 
     printf("Stats:\n");
-    printf("Number of simulations: %s\n", formatNumber(iterations).c_str());
-    printf("Total simulation time: %s\n", formatDuration(durationIter).c_str());
-    printf("Average execution time: %s\n", formatDuration(averageDurationUs).c_str());
-    printf("Average number of comparisons: %s\n", formatNumber(averageComparisons).c_str());
-    printf("Average number of array accesses: %s\n", formatNumber(averageAccesses).c_str());
-    
+    printf("Number of elements inside the array: %s\n", formatNumber(size).c_str());
+    printf("Number of simulations:               %s\n", formatNumber(iterations).c_str());
+    printf("Total simulation time:               %s\n", formatDuration(durationIter).c_str());
+    printf("Average sorting time:                %s\n", formatDuration(averageDurationUs).c_str());
+    printf("Average number of comparisons:       %s\n", formatNumber(averageComparisons).c_str());
+    printf("Average number of array accesses:    %s\n", formatNumber(averageAccesses).c_str());
+
     return 0;
 }
