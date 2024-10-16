@@ -39,7 +39,7 @@ Stats sort(float* arr, int size) {
         // while the element to the left is bigger than the current element
         // e.g. 8 and 4
         while (j >= 0 && arr[j] > current) {
-            stats.comparisons++;
+            stats.comparisons += 2; // two comparisons above, not one
             stats.acceses++;
             // temporarily copy the element to the right to the left
             // e.g. 8 and 8 
