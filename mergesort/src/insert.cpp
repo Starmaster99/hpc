@@ -70,7 +70,7 @@ std::string formatNumber(uint64_t num) {
 
 std::string formatDuration(uint64_t durationUs) {
     if (durationUs < 10) {
-        return "<0 µs";
+        return "<0µs";
     }
     else if(durationUs < 1000) {
         return std::to_string(static_cast<double>(durationUs)) + "µs"; // microseconds
@@ -83,53 +83,33 @@ std::string formatDuration(uint64_t durationUs) {
     } 
 }
 
-int main() {
+void runSimulation(int size) {
+    float* arr = new float[size]{ };
+    populate(arr, size);
 
+    auto start = std::chrono::high_resolution_clock::now();
+    Stats stats = sort(arr, size);
+    auto end = std::chrono::high_resolution_clock::now();
+
+    auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start).count();
+
+    printf("Simulation of size %s done in %s with %s comparisons.\n",
+            formatNumber(size).c_str(),
+            formatDuration(duration).c_str(),
+            formatNumber(stats.comparisons).c_str());
+    delete[] arr;
+}
+
+int main() {
     std::srand(std::time(0));
 
-    int size        = 1000;
-    int iterations  = 1000;
-    u_int64_t totalDurationUs = 0;
-    double totalComparisons = 0;
-    double totalAccesses = 0;
+    int startSize = 2;
+    int endSize = 500;
 
-    printf("Simulating sorting numbers using insertion sort, please wait...\n");
-
-    auto startIter = std::chrono::high_resolution_clock::now(); // start simulation benchmark
-    // simulate running it (iterations) times:
-    for (int i = 0; i < iterations; i++) {
-        float* arr = new float[size]{ };
-        populate(arr, size);
-
-        auto start = std::chrono::high_resolution_clock::now(); // start benchmark
-        Stats stats = sort(arr, size);
-        auto end = std::chrono::high_resolution_clock::now();   // stop benchmark
-
-        auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start).count();
-
-        // accumulate stats
-        totalDurationUs += duration;
-        totalComparisons += stats.comparisons;
-        totalAccesses += stats.acceses;
-
-        delete[] arr;
+    printf("Simulating single-threaded sorting numbers using insertion sort, please wait...\n");
+    for(int size = startSize; size <= endSize; size++) {
+        runSimulation(size);
     }
-    auto endIter = std::chrono::high_resolution_clock::now();   // stop simulation benchmark
-    // total time spent running simulationsS
-    auto durationIter = std::chrono::duration_cast<std::chrono::microseconds>(endIter - startIter).count();
-
-    // calculate averages
-    double averageDurationUs = totalDurationUs / iterations;
-    double averageComparisons = totalComparisons / iterations;
-    double averageAccesses = totalAccesses / iterations;
-
-    printf("Stats:\n");
-    printf("Number of elements inside the array: %s\n", formatNumber(size).c_str());
-    printf("Number of simulations:               %s\n", formatNumber(iterations).c_str());
-    printf("Total simulation time:               %s\n", formatDuration(durationIter).c_str());
-    printf("Average sorting time:                %s\n", formatDuration(averageDurationUs).c_str());
-    printf("Average number of comparisons:       %s\n", formatNumber(averageComparisons).c_str());
-    printf("Average number of array accesses:    %s\n", formatNumber(averageAccesses).c_str());
 
     return 0;
 }
