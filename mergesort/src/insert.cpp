@@ -3,6 +3,8 @@
 #include <ctime>
 #include <chrono>
 #include <string>
+#include <sstream>
+#include <iomanip>
 
 // struct for some algorithm analysis statistics
 struct Stats {
@@ -18,17 +20,10 @@ void populate(float* arr, int size) {
     }
 }
 
-void print(float* arr, int size) {
-    for (int i = 0; i < size; i++) {
-        printf("%f ", arr[i]);
-    }
-    printf("\n");
-}
-
 Stats sort(float* arr, int size) {
-    Stats stats;    // an instance to track statistics
+    Stats stats;    // an instance to track statistics  
     // start from the second element since the first one has already been sorted
-    // and iterate over until we reach the end of the array
+    // and iterate over until we reach the end of the   array
     for (int i = 1; i < size; i++) {
         float current = arr[i]; // cache the current element to be inserted
         stats.acceses++;        // track array access
@@ -69,22 +64,24 @@ std::string formatNumber(uint64_t num) {
 }
 
 std::string formatDuration(uint64_t durationUs) {
+    std::ostringstream oss;
+
     if (durationUs < 10) {
         return "<0µs";
     }
     else if(durationUs < 1000) {
-        return std::to_string(static_cast<double>(durationUs)) + "µs"; // microseconds
+        oss << durationUs << "µs"; // microseconds
     }
     else if(durationUs < 1000000) { 
-        return std::to_string(static_cast<double>(durationUs) / 1000) + "ms"; // milliseconds
+        oss << std::fixed << std::setprecision(2) << static_cast<double>(durationUs) / 1000 << "ms"; // milliseconds
     }
     else {
-        return std::to_string(static_cast<double>(durationUs) / 1000000) + "s"; // seconds
+         oss << std::fixed << std::setprecision(2) << static_cast<double>(durationUs) / 1000000 << "s"; // seconds
     } 
+    return oss.str();
 }
 
-void runSimulation(int size) {
-    float* arr = new float[size]{ };
+void runSimulation(float* arr, int size) {
     populate(arr, size);
 
     auto start = std::chrono::high_resolution_clock::now();
@@ -97,19 +94,20 @@ void runSimulation(int size) {
             formatNumber(size).c_str(),
             formatDuration(duration).c_str(),
             formatNumber(stats.comparisons).c_str());
-    delete[] arr;
 }
 
 int main() {
     std::srand(std::time(0));
 
-    int startSize = 2;
+    int startSize = 1;
     int endSize = 500;
+    float* arr = new float[endSize]{ };
 
     printf("Simulating single-threaded sorting numbers using insertion sort, please wait...\n");
     for(int size = startSize; size <= endSize; size++) {
-        runSimulation(size);
+        runSimulation(arr, size);
     }
 
+    delete[] arr;
     return 0;
 }
