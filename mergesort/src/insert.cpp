@@ -5,6 +5,7 @@
 #include <string>
 #include <sstream>
 #include <iomanip>
+#include <random>
 
 // struct for some algorithm analysis statistics
 struct Stats {
@@ -15,9 +16,11 @@ struct Stats {
 };
 
 void populate(float* arr, int size) {
+    std::mt19937 gen(std::random_device{}());
+    std::uniform_real_distribution<> dis(0.0, 255.0);
     for (int i = 0; i < size; i++) {
-        arr[i] = (static_cast<float>(rand()) / RAND_MAX) * 255.0f;
-    }
+        arr[i] = dis(gen);
+}
 }
 
 Stats sort(float* arr, int size) {
@@ -52,15 +55,10 @@ Stats sort(float* arr, int size) {
 }
 
 std::string formatNumber(uint64_t num) {
-    std::string str = std::to_string(num);
-
-    int insertPos = str.length() - 3;
-    while(insertPos > 0) {
-        str.insert(insertPos, ",");
-        insertPos -= 3;
-    }
-
-    return str;
+    std::stringstream ss;
+    ss.imbue(std::locale(""));   // regional thing. en_US.UTF-8 for commas
+    ss << num;
+    return ss.str();
 }
 
 std::string formatDuration(uint64_t durationUs) {
