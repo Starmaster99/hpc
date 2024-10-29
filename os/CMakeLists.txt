@@ -11,6 +11,6 @@ project(os LANGUAGES C CXX)
 
 file(MAKE_DIRECTORY bin/)
 
-add_executable(${PROJECT_NAME} src/task1.1.cpp)
+add_executable(${PROJECT_NAME} src/task1.2.cpp)
 
 install(TARGETS ${PROJECT_NAME} DESTINATION ${PROJECT_SOURCE_DIR}/bin/)
