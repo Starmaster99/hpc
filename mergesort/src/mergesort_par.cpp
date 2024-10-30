@@ -5,8 +5,6 @@
 
 #define omp_set_num_threads 4
 
-
-
 int main() {
    
    #pragma omp parallel

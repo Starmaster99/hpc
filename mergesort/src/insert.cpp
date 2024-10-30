@@ -103,8 +103,6 @@ Stats runSimulation(float* arr, int size) {
 }
 
 int main() {
-    //std::srand(std::time(0));
-
     int startSize = 3;
     int endSize = 50;
     int simulations = 50;

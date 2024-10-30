@@ -1,16 +1,21 @@
 #include <stdio.h>
 #include <cstdlib>
 #include <ctime>
+#include <random>
+#include <chrono>
+
+#define SIZE 100000000
 
 void populate(float* arr, int size) {
-    // naive approach
+    //std::random_device{}()
+    std::mt19937 gen(69);
+    std::uniform_real_distribution<> dis(0.0, 255.0);
     for (int i = 0; i < size; i++) {
-        arr[i] = (static_cast<float>(rand()) / RAND_MAX) * 255.0f;
+        arr[i] = dis(gen);
     }
 }
 
 void merge(float* left, float* right, float* arr, int size) {
-
     int leftSize = size / 2;
     int rightSize = size - leftSize;
 
@@ -27,7 +32,6 @@ void merge(float* left, float* right, float* arr, int size) {
         else {
             arr[i++] = right[r++];
         }
-
     }
     
     while(l < leftSize) {
@@ -65,6 +69,18 @@ void sort(float* arr, int size) {
     delete[] left;
 }
 
+std::string formatNumber(uint64_t num) {
+    std::string str = std::to_string(num);
+
+    int insertPos = str.length() - 3;
+    while(insertPos > 0) {
+        str.insert(insertPos, ",");
+        insertPos -= 3;
+    }
+
+    return str;
+}
+
 void print(float* arr, int size) {
     for (int i = 0; i < size; i++) {
         printf("%f ", arr[i]);
@@ -72,23 +88,41 @@ void print(float* arr, int size) {
     printf("\n");
 }
 
+
+std::string formatDuration(uint64_t durationUs) {
+    if (durationUs < 10) {
+        return "<0 µs";
+    }
+    else if(durationUs < 1000) {
+        return std::to_string(static_cast<double>(durationUs)) + "µs"; // microseconds
+    }
+    else if(durationUs < 1000000) { 
+        return std::to_string(static_cast<double>(durationUs) / 1000) + "ms"; // milliseconds
+    }
+    else {
+        return std::to_string(static_cast<double>(durationUs) / 1000000) + "s"; // seconds
+    } 
+}
+
 int main() {
+    float* arr = new float[SIZE]{ };
 
-    std::srand(std::time(0));
+    printf("Simulating single-threaded sorting numbers array size %s using MergeSort, please wait...\n",
+            formatNumber(SIZE).c_str());
 
-    int size = 10;
-    float* arr = new float[size]{ };
-
-    printf("Populating the array of size %i with random numbers...\n", size);
-    populate(arr, size);
-    print(arr, size);
-    printf("Array has been populated successfully.\n");
-
+    printf("Initializing the array...\n", SIZE);
+    auto start = std::chrono::high_resolution_clock::now(); // start benchmark
+    populate(arr, SIZE);
+    auto end = std::chrono::high_resolution_clock::now(); // stop
+    auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start).count();
+    printf("Array initialized successfully.\nTime took: %s\n", formatDuration(duration).c_str());
     
     printf("Sorting...\n");
-    sort(arr, size);
-    print(arr, size);
-    printf("Numbers have been sorted successfully.\n");
+    start = std::chrono::high_resolution_clock::now();
+    sort(arr, SIZE);
+    end = std::chrono::high_resolution_clock::now();
+    duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start).count();
+    printf("Numbers sorted successfully.\nTime took: %s\n", formatDuration(duration).c_str());
 
 
     delete[] arr;

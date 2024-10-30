@@ -14,7 +14,7 @@ file(MAKE_DIRECTORY bin/)
 add_executable(${PROJECT_NAME}-seq src/mergesort_seq.cpp)
 add_executable(${PROJECT_NAME}-par src/mergesort_par.cpp)
 
-add_executable(insert src/insert.cpp)
+#add_executable(hempsort src/hempsort.cpp)
 
 find_package(OpenMP REQUIRED)
 if(OpenMP_CXX_FOUND)
