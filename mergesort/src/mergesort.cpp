@@ -4,9 +4,11 @@
 #include <random>
 #include <chrono>
 #include <fstream>
+#include <iostream>
 
 unsigned comparisons = 0;
 double a = 0.0f;
+std::ofstream outFile("../simulation_results_merge.csv");
 
 void populate(float* arr, int size, int seed) {
     std::mt19937 gen(seed);
@@ -120,6 +122,7 @@ void runSimulation(float* arr, int iterations, int arraySize, int seed) {
     double averageComparisons = totalComparisons / iterations;
     double averageA = totalA / iterations;
 
+    outFile << arraySize << "," << iterations << "," << averageA << "\n";
     printf("Size: %i\nAverage comparisons: %f\nAverage 'a': %f\n", 
             arraySize, averageComparisons, averageA);
 }
@@ -131,8 +134,7 @@ int main() {
     int seed = std::random_device{}();
     float* arr = new float[endSize]{ };
 
-    std::ofstream outFile("../simulation_results_merge.csv");
-    outFile << "Size,Simulations,Average a\n";
+    outFile << "Size,Iterations,Average A\n";
 
     for(int size = startSize; size <= endSize; size++) {
         runSimulation(arr, iterations, size, seed);
