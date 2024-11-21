@@ -10,8 +10,8 @@
 
 // struct for some algorithm analysis statistics
 struct Stats {
-    unsigned comparisons;    // comparisons number
-    unsigned acceses;        // array accesses number
+    unsigned comparisons;  // comparisons number
+    unsigned acceses;      // array accesses number
     double a;              // current amount comparisons to the total amount of pairs to compare
 
     Stats() : comparisons(0), acceses(0), a(0.0) {} // initialize stats
